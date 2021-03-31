@@ -20,3 +20,11 @@ class cnn_data_set(list):
             test.append(self[i][test_id,:,:])
         
         return train,im_class[train_id],test,im_class[test_id]
+    
+    def merge(self,self2):
+        new_list=[]
+        for i in range(len(self)):
+            new_list.append(np.concatenate([self[i],self2[i]]))
+        
+        
+        return cnn_data_set(new_list)

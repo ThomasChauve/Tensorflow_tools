@@ -4,7 +4,7 @@ from sklearn.preprocessing import StandardScaler
 import cusignal
 import cupy as cp
 from tqdm.notebook import tqdm
-import cnn_data_set
+import Tensorflow_tools.cnn_data_set as mtfc
 
 class input_data(np.ndarray):
     '''
@@ -24,16 +24,23 @@ class input_data(np.ndarray):
         '''
         Normalized the data set
         '''
+        ss=self.shape
+        fdata=np.zeros([ss[0]*ss[1],ss[2]])
+        for i in range(ss[2]):
+            fdata[:,i]=self[:,:,i].flatten()
+            
         if scaler==None:
             scaler = StandardScaler()
-            n_data = scaler.fit_transform(self)
+            n_data = scaler.fit_transform(fdata)
         else:
-            n_data=scaler.transform(self)
+            n_data=scaler.transform(fdata)
 
 
         n_data = input_data(np.clip(n_data, -5, 5))
         
-        return n_data,scaler
+        res_data=n_data.reshape(ss)
+        
+        return res_data,scaler
     
     def create_sub_image(self,dim,column_BI=0):
         '''split data set of one image in data set of sub image'''
@@ -60,7 +67,7 @@ class input_data(np.ndarray):
             input_list.append(np.transpose(res[:,:,i,:]))
         
         
-        return cnn_data_set.cnn_data_set(input_list),BiClass
+        return mtfc.cnn_data_set(input_list),BiClass
 
 
 #-------------------------------------
