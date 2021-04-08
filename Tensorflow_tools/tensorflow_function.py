@@ -6,11 +6,11 @@ colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 def cnn_build(filter,input_size,kernel_size=(3,3)):
     cnn2d=[]
-    cnn2d.append(keras.Input(shape=(input_size,input_size,1)))
+    cnn2d.append(keras.Input(shape=input_size))
 
     for ifil in filter :
         cnn2d.append(keras.layers.Conv2D(filters=ifil,kernel_size=kernel_size,activation='relu')(cnn2d[-1]))
-    	cnn2d.append(keras.layers.MaxPooling2D(pool_size=(2,2))(cnn2d[-1]))
+        cnn2d.append(keras.layers.MaxPooling2D(pool_size=(2,2))(cnn2d[-1]))
 
 
 

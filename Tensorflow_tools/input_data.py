@@ -4,7 +4,7 @@ from sklearn.preprocessing import StandardScaler
 import cusignal
 import cupy as cp
 from tqdm.notebook import tqdm
-import Tensorflow_tools.cnn_data_set as mtfc
+import random
 
 class input_data(np.ndarray):
     '''
@@ -54,20 +54,28 @@ class input_data(np.ndarray):
             tmp=split_mat(dataIA[:,:,i],dim)
             if i==0:
                 st=np.shape(tmp)
-                res=np.zeros([st[0],st[1],ss[-1],st[2]])
-            res[:,:,i,:]=tmp
+                res=np.zeros([st[0],st[1],st[2],ss[-1]])
+            res[:,:,:,i]=tmp
 
         kernel=np.zeros([dim,dim])
         kernel[int((dim-1)/2),int((dim-1)/2)]=1
         BiClass=cp.asnumpy(cusignal.convolve2d(im_class,kernel,mode='valid').flatten())
         
-        input_list=[]
-        ss=np.shape(res)
-        for i in range(ss[2]):
-            input_list.append(np.transpose(res[:,:,i,:]))
         
+        return input_data(res),BiClass
+    
+    def split_dataset(self,im_class,rpc=0.2):
+        nb_input=self.shape[0]
+        test_id=np.int32(np.array(random.sample(range(0,nb_input-1), int(rpc*nb_input))))
+        allid=np.int32(np.linspace(0,nb_input-1,nb_input))
+
+        train_id = np.int32(np.setdiff1d(allid,test_id))
         
-        return mtfc.cnn_data_set(input_list),BiClass
+        return self[train_id,:,:,:],im_class[train_id],self[test_id,:,:,:],im_class[test_id]
+    
+    def merge(self,self2):
+        
+        return input_data(np.concatenate([self,self2],axis=0))
 
 
 #-------------------------------------
@@ -84,8 +92,8 @@ def split_mat(mat,dim):
             tmp=cusignal.convolve2d(mat,kernel,mode='valid').flatten()
             if i+j==0:
                 nb_img=len(tmp)
-                res=np.zeros([int(dim**2),nb_img])
+                res=np.zeros([nb_img,int(dim**2)])
             
-            res[i*dim+j,:]=cp.asnumpy(tmp)
+            res[:,i*dim+j]=cp.asnumpy(tmp)
             
-    return res.reshape([dim,dim,nb_img])[::-1,::-1,:]
+    return res.reshape([nb_img,dim,dim])[:,::-1,::-1]
