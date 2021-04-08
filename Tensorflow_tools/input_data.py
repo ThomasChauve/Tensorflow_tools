@@ -3,7 +3,6 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 import cusignal
 import cupy as cp
-from tqdm.notebook import tqdm
 import random
 
 class input_data(np.ndarray):
@@ -50,7 +49,7 @@ class input_data(np.ndarray):
 
 
         ss=np.shape(dataIA)
-        for i in tqdm(range(ss[-1])):
+        for i in range(ss[-1]):
             tmp=split_mat(dataIA[:,:,i],dim)
             if i==0:
                 st=np.shape(tmp)
