@@ -40,4 +40,4 @@ def plot_metrics(history,color='r'):
       plt.ylim([0,1])
 
     plt.legend()
-    fig.suptitle('best_metric='+str(np.round(best_metric,4)))
+    plt.suptitle('best_metric='+str(np.round(best_metric,4)))
