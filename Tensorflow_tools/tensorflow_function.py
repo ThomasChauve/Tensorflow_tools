@@ -1,4 +1,5 @@
 from tensorflow import keras
+import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 mpl.rcParams['figure.figsize'] = (12, 10)
@@ -22,6 +23,7 @@ def cnn_build(filter,input_size,kernel_size=(3,3)):
 
 def plot_metrics(history,color='r'):
   metrics = ['loss', 'auc', 'precision', 'recall']
+  best_metric=history.history[metrics[0]][-1]**(-1)*history.history[metrics[1]][-1]*history.history[metrics[2]][-1]*history.history[metrics[3]][-1]
   for n, metric in enumerate(metrics):
     name = metric.replace("_"," ").capitalize()
     plt.subplot(2,2,n+1)
@@ -38,3 +40,4 @@ def plot_metrics(history,color='r'):
       plt.ylim([0,1])
 
     plt.legend()
+    fig.suptitle('best_metric='+str(np.round(best_metric,4)))
