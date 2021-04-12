@@ -11,7 +11,7 @@ def cnn_build(filter,input_size,kernel_size=(3,3)):
 
     for ifil in filter :
         cnn2d.append(keras.layers.Conv2D(filters=ifil,kernel_size=kernel_size,activation='relu')(cnn2d[-1]))
-        cnn2d.append(keras.layers.MaxPooling2D(pool_size=(2,2))(cnn2d[-1]))
+        cnn2d.append(keras.layers.AveragePooling2D(pool_size=(2,2))(cnn2d[-1]))
 
 
 
