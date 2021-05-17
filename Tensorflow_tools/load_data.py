@@ -8,7 +8,7 @@ def load_data(adr,shape):
     id=data['misAngle']>np.pi/2
     data['misAngle'][id]=np.pi-data['misAngle'][id]
     #select variable
-    field=['RX','eqStrain','eqStress','Sys_pr','dist_to_GB','misAngle','Schmid_factor']
+    field=['RX','eqStrain','eqStress','Sys_pr','dist_to_GB','misAngle','Schmid_factor','dist_to_TJ','diff_schmid']
     cdata=mtfl.input_data(np.array(data[field]).reshape([shape[0],shape[1],len(field)]))
     
     return cdata
